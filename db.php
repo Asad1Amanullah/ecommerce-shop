@@ -1,16 +1,20 @@
 <?php
 
-$servername = getenv("DB_HOST");
-$username   = getenv("DB_USER");
-$password   = getenv("DB_PASS");
-$db         = getenv("DB_NAME");
+$host = getenv("DB_HOST");
+$db   = getenv("DB_NAME");
+$user = getenv("DB_USER");
+$pass = getenv("DB_PASS");
+$port = getenv("DB_PORT");
 
-// Create connection
-$con = mysqli_connect($servername, $username, $password, $db);
-
-// Check connection
-if (!$con) {
-    die("Database connection failed: " . mysqli_connect_error());
+try {
+    $con = new PDO(
+        "pgsql:host=$host;port=$port;dbname=$db",
+        $user,
+        $pass
+    );
+    $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Database connection failed: " . $e->getMessage());
 }
 
 ?>
